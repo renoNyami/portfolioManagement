@@ -1,145 +1,59 @@
-import React, { useState, useEffect } from 'react';
-import Editor from '@monaco-editor/react';
-import axios from 'axios';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Layout } from 'antd';
 import './App.css';
-import { saveSnippet, getSnippet } from './api/snippets';
 
-const DEFAULT_CODE = `<!DOCTYPE html>
-<html>
-<head><title>Example</title></head>
-<body>
-  <h1>Hello World</h1>
-</body>
-</html>`;
+// 导入页面组件
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import ProfileSettingsPage from './pages/ProfileSettingsPage';
+import ProjectSettingsPage from './pages/ProjectSettingsPage';
+import PortfolioPage from './pages/PortfolioPage';
+import DashboardPage from './pages/DashboardPage';
+import Sidebar from './components/Sidebar'; // 导入侧边栏组件
+import ProtectedRoute from './components/ProtectedRoute'; // 导入ProtectedRoute组件
+
+const { Header, Content } = Layout;
 
 function App() {
-  const [code, setCode] = useState(DEFAULT_CODE);
-  const [language, setLanguage] = useState('html');
-  const [theme, setTheme] = useState('vs-light');
-  const [sharedId, setSharedId] = useState(null);
-  const [isEdited, setIsEdited] = useState(false);
-
-  // 从 URL 加载代码片段
-  useEffect(() => {
-    const loadSnippet = async () => {
-      const path = window.location.pathname;
-      const match = path.match(/\/snippets\/([\w-]+)/);
-      
-      if (match && match[1]) {
-        try {
-          const response = await getSnippet(match[1]);
-          const { code: snippetCode, language: snippetLang, theme: snippetTheme } = response.data;
-          setCode(snippetCode);
-          setLanguage(snippetLang);
-          setTheme(snippetTheme);
-          setSharedId(match[1]);
-        } catch (error) {
-          console.error('加载代码片段失败:', error);
-          alert('加载代码片段失败，请检查链接是否正确');
-        }
-      }
-    };
-    
-    loadSnippet();
-  }, []);
-
-  // 检测代码修改
-  useEffect(() => {
-    const isDefault = code === DEFAULT_CODE;
-    setIsEdited(!isDefault && !sharedId);
-  }, [code, sharedId]);
-
-  // 分享代码
-  const API_URL = process.env.REACT_APP_API_BASE_URL; // 从环境变量获取 API 地址
-
-  const handleShare = async () => {
-    if (!API_URL) {
-      console.error('API 地址未配置，请检查 .env 文件');
-      return;
-    }
-
-    if (!code) {
-      console.error('代码内容不能为空');
-      return;
-    }
-    try {
-      const res = await saveSnippet({ 
-        code: code || '', 
-        language: language || 'html', 
-        theme: theme || 'vs-light' 
-      });
-      if (res && res.id) {
-        setSharedId(res.id);
-        console.log('保存成功，ID:', res.id);
-        // 更新URL，但不触发页面刷新
-        window.history.pushState({}, '', `/snippets/${res.id}`);
-      } else {
-        console.error('响应数据异常，未正确获取 id');
-        throw new Error('响应数据异常，未正确获取 id');
-      }
-  } catch (err) {
-    const errorMessage = err.response?.data?.error || err.message || '未知错误';
-    console.error('保存失败:', errorMessage);
-    
-    // 根据错误类型显示不同的错误提示
-    if (errorMessage.includes('缺少必要字段')) {
-      alert('请确保填写了所有必要信息（代码内容、语言、主题）');
-    } else if (errorMessage.includes('API')) {
-      alert('服务器连接失败，请检查API配置');
-    } else {
-      alert(`保存失败: ${errorMessage}`);
-    }
-  }
-  };
 
   return (
-    <div className="container">
-      <div className="controls">
-        <select 
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
-        >
-          <option value="html">HTML</option>
-          <option value="css">CSS</option>
-          <option value="javascript">JavaScript</option>
-        </select>
+    <Router>
+      <Routes>
+        {/* 认证相关的路由，不显示侧边栏 */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-        <select
-          value={theme}
-          onChange={(e) => setTheme(e.target.value)}
-        >
-          <option value="vs-light">Light</option>
-          <option value="vs-dark">Dark</option>
-        </select>
+        {/* 登录后的路由，显示侧边栏 */}
+        <Route
+          path="/*"
+          element={
+            <ProtectedRoute>
+            <Layout style={{ minHeight: '100vh' }}>
+              <Sidebar />
+              <Layout className="site-layout">
 
-        <button 
-          onClick={handleShare}
-          disabled={!code}
-        >
-          {sharedId ? '更新分享' : '分享代码'}
-        </button>
-
-        {sharedId && (
-          <div className="share-link">
-            分享链接：{window.location.origin}/snippets/{sharedId} {/* 建议与后端路由一致 */}
-          </div>
-        )}
-      </div>
-
-      <div className="editor-container">
-        <Editor
-          height="80vh"
-          language={language}
-          theme={theme}
-          value={code}
-          onChange={(value) => setCode(value)} // 实时更新 code 状态
-          options={{ 
-            minimap: { enabled: false },
-            fontSize: 14
-          }}
+                <Content style={{ margin: '0 16px' }}>
+                  <Routes>
+                    <Route path="/dashboard" element={<DashboardPage />} />
+                    <Route path="/profile-settings" element={<ProfileSettingsPage />} />
+                    <Route path="/project-settings" element={<ProjectSettingsPage />} />
+                    <Route path="/portfolio/:userId" element={<PortfolioPage />} />
+                    {/* 默认重定向到仪表盘或个人资料页 */}
+                    <Route path="*" element={<DashboardPage />} />
+                  </Routes>
+                </Content>
+              </Layout>
+            </Layout>
+            </ProtectedRoute>
+          }
         />
-      </div>
-    </div>
+      </Routes>
+    </Router>
   );
 }
 

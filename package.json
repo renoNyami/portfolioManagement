@@ -1,48 +1,118 @@
 {
-  "name": "codeshare",
+
   "version": "0.1.0",
+
   "private": true,
+
   "dependencies": {
+
+    "@ant-design/icons": "^6.0.0",
+
+    "@ant-design/v5-patch-for-react-19": "^1.0.3",
+
     "@monaco-editor/react": "^4.7.0",
+
     "@testing-library/dom": "^10.4.0",
+
     "@testing-library/jest-dom": "^6.6.3",
+
     "@testing-library/react": "^16.3.0",
+
     "@testing-library/user-event": "^13.5.0",
+
+    "antd": "^5.26.3",
+
     "axios": "^1.9.0",
+
+    "bcryptjs": "^3.0.2",
+
     "cors": "^2.8.5",
+
     "express": "^5.1.0",
+
+    "express-session": "^1.18.1",
+
+    "jsonwebtoken": "^9.0.2",
+
     "mongodb": "^6.16.0",
+
     "mongoose": "^8.15.1",
+
+    "multer": "^2.0.1",
+
     "mysql2": "^3.14.1",
+
+    "passport": "^0.7.0",
+
+    "passport-github2": "^0.1.12",
+
+    "passport-qq": "^0.1.0",
+
     "react": "^19.1.0",
+
     "react-dom": "^19.1.0",
+
+    "react-router-dom": "^6.22.3",
+
     "react-scripts": "5.0.1",
+
     "sequelize": "^6.37.7",
+
     "uuid": "^11.1.0",
+
     "web-vitals": "^2.1.4"
+
   },
+
   "scripts": {
+
     "start": "react-scripts start",
+
     "build": "react-scripts build",
+
     "test": "react-scripts test",
+
     "eject": "react-scripts eject"
+
   },
+
   "eslintConfig": {
+
     "extends": [
+
       "react-app",
+
       "react-app/jest"
+
     ]
+
   },
+
+  "proxy": "http://localhost:5000",
+
   "browserslist": {
+
     "production": [
+
       ">0.2%",
+
       "not dead",
+
       "not op_mini all"
+
     ],
+
     "development": [
+
       "last 1 chrome version",
+
       "last 1 firefox version",
+
       "last 1 safari version"
+
     ]
+
   }
+
 }
+

@@ -3,7 +3,7 @@ const { Sequelize } = require('sequelize');
 
 // 从环境变量获取配置（确保已正确加载）
 const mysqlConfig = {
-  database: process.env.MYSQL_DATABASE || 'code_share_db',
+  database: process.env.MYSQL_DATABASE || `user_management_db`,
   username: process.env.MYSQL_USER || 'root', // 设默认值为 root
   password: process.env.MYSQL_PASSWORD || 'sql2008', // 无密码时为空
   host: process.env.MYSQL_HOST || 'localhost',

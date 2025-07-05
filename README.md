@@ -1,70 +1,81 @@
-# Getting Started with Create React App
+# 用户管理系统
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 项目概述
+这是一个基于React和Node.js的用户管理系统，提供用户注册、登录、个人资料管理等功能。
 
-## Available Scripts
+## 功能特性
+- 用户认证（QQ OAuth登录）
+- 个人资料管理
+- 头像上传功能
+- 项目管理系统（可选）
 
-In the project directory, you can run:
+## 技术栈
+- 前端：React, Ant Design
+- 后端：Node.js, Express
+- 数据库：MySQL
 
-### `npm start`
+## 安装指南
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 前置要求
+- Node.js 16+
+- MySQL 8.0+
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 安装步骤
+1. 克隆仓库
+```bash
+git clone <仓库地址>
+```
+2. 安装依赖
+```bash
+cd userManagement
+npm install
+cd ../userManagement/server
+npm install
+```
+3. 配置环境变量
+复制`.env.example`为`.env`并填写实际配置
 
-### `npm test`
+4. 启动应用
+```bash
+# 启动前端
+cd ../userManagement
+npm start
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# 启动后端
+cd server
+npm start
+```
 
-### `npm run build`
+## 配置说明
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 必需环境变量
+```
+QQ_CLIENT_ID=你的QQ应用ID
+QQ_CLIENT_SECRET=你的QQ应用密钥
+MYSQL_HOST=数据库主机
+MYSQL_USER=数据库用户
+MYSQL_PASSWORD=数据库密码
+MYSQL_DATABASE=数据库名称
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 使用说明
+1. 访问 `http://localhost:3000`
+2. 使用QQ账号登录
+3. 在个人资料页面管理您的信息
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 开发指南
 
-### `npm run eject`
+### 代码结构
+```
+userManagement/
+├── server/            # 后端代码
+│   ├── authRoutes.js   # 认证路由
+│   ├── profileRoutes.js # 个人资料路由
+│   └── ...
+└── src/               # 前端代码
+    ├── pages/         # 页面组件
+    └── ...
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 贡献指南
+欢迎提交Pull Request或Issue。
