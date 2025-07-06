@@ -23,6 +23,23 @@ router.get('/projects', auth, async (req, res) => {
   }
 });
 
+// Get projects by user ID
+router.get('/users/:userId/projects', auth, async (req, res) => {
+  try {
+    const projects = await Project.findAll({
+      where: { userId: req.params.userId },
+      include: [{
+        model: User,
+        attributes: ['email', 'username']
+      }]
+    });
+    res.json(projects);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
 router.get('/projects/my-projects', auth, async (req, res) => {
   try {
     const projects = await Project.findAll({

@@ -28,6 +28,12 @@ function DashboardPage() {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         });
         if (!response.ok) {
+          if (response.status === 401) {
+            localStorage.removeItem('token');
+            navigate('/login');
+            message.error('认证失败，请重新登录。');
+            return;
+          }
           const errorData = await response.json();
           throw new Error(errorData.msg || '获取项目失败');
         }

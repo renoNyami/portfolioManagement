@@ -9,6 +9,8 @@ import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import ProfileSettingsPage from './pages/ProfileSettingsPage';
+import UserListPage from './pages/UserListPage';
+import UserProjectsPage from './pages/UserProjectsPage';
 import ProjectSettingsPage from './pages/ProjectSettingsPage';
 import PortfolioPage from './pages/PortfolioPage';
 import DashboardPage from './pages/DashboardPage';
@@ -41,6 +43,8 @@ function App() {
                   <Routes>
                     <Route path="/dashboard" element={<DashboardPage />} />
                     <Route path="/profile-settings" element={<ProfileSettingsPage />} />
+                    <Route path="/users" element={<UserListPage />} />
+                    <Route path="/users/:userId/projects" element={<UserProjectsPage />} />
                     <Route path="/project-settings" element={<ProjectSettingsPage />} />
                     <Route path="/portfolio/:userId" element={<PortfolioPage />} />
                     {/* 默认重定向到仪表盘或个人资料页 */}

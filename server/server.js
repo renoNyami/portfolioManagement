@@ -62,6 +62,7 @@ createDatabaseIfNotExists()
 const authRoutes = require('./authRoutes');
 const profileRoutes = require('./profileRoutes');
 const projectRoutes = require('./projectRoutes');
+const userRoutes = require('./userRoutes');
 
 // Test GET route
 app.get('/test', (req, res) => {
@@ -71,6 +72,7 @@ app.get('/test', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api', profileRoutes);
 app.use('/api', projectRoutes);
+app.use('/api', userRoutes);
 
 const PORT = process.env.PORT || 5000;
 sequelize.sync().then(() => {

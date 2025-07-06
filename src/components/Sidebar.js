@@ -4,7 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   UserOutlined,
   ProjectOutlined,
-  DashboardOutlined
+  DashboardOutlined,
+  TeamOutlined
 } from '@ant-design/icons';
 
 const { Sider } = Layout;
@@ -32,7 +33,10 @@ export default function Sidebar() {
         <Menu.Item key="3" icon={<ProjectOutlined />}>
           <Link to="/project-settings">项目管理</Link>
         </Menu.Item>
-        <Menu.Item key="4">
+        <Menu.Item key="4" icon={<TeamOutlined />}>
+          <Link to="/users">用户列表</Link>
+        </Menu.Item>
+        <Menu.Item key="5">
           <Button type="link" onClick={handleLogout} style={{ padding: 0 }}>退出登录</Button>
         </Menu.Item>
       </Menu>
