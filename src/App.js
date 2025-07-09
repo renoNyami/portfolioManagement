@@ -14,6 +14,9 @@ import UserProjectsPage from './pages/UserProjectsPage';
 import ProjectSettingsPage from './pages/ProjectSettingsPage';
 import PortfolioPage from './pages/PortfolioPage';
 import DashboardPage from './pages/DashboardPage';
+import ProjectDetailPage from './pages/ProjectDetailPage';
+import CommunityPage from './pages/CommunityPage';
+import CommunityPostDetailPage from './pages/CommunityPostDetailPage';
 import Sidebar from './components/Sidebar'; // 导入侧边栏组件
 import ProtectedRoute from './components/ProtectedRoute'; // 导入ProtectedRoute组件
 
@@ -47,6 +50,10 @@ function App() {
                     <Route path="/users/:userId/projects" element={<UserProjectsPage />} />
                     <Route path="/project-settings" element={<ProjectSettingsPage />} />
                     <Route path="/portfolio/:userId" element={<PortfolioPage />} />
+                    <Route path="/my-projects" element={<UserProjectsPage />} />
+                    <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
+                    <Route path="/community" element={<CommunityPage />} />
+                    <Route path="/community/:postId" element={<CommunityPostDetailPage />} />
                     {/* 默认重定向到仪表盘或个人资料页 */}
                     <Route path="*" element={<DashboardPage />} />
                   </Routes>

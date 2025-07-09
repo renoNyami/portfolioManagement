@@ -7,15 +7,33 @@ const router = express.Router();
 // Get all projects for a user
 const User = require('./models/User'); // 引入 User 模型
 
-// Get all projects
+// Get all projects with search and filter options
 router.get('/projects', auth, async (req, res) => {
   try {
+    const { search, category } = req.query;
+    
+    const where = {};
+    if (search) {
+      where[Op.or] = [
+        { name: { [Op.like]: `%${search}%` } },
+        { description: { [Op.like]: `%${search}%` } }
+      ];
+    }
+    
+    const include = [{
+      model: User,
+      attributes: ['email', 'username']
+    }];
+    
+    if (category === 'my') {
+      where.userId = req.user.id;
+    }
+    
     const projects = await Project.findAll({
-      include: [{
-        model: User,
-        attributes: ['email', 'username'] // 只包含用户邮箱和用户名
-      }]
+      where,
+      include
     });
+    
     res.json(projects);
   } catch (err) {
     console.error(err.message);
@@ -50,6 +68,25 @@ router.get('/projects/my-projects', auth, async (req, res) => {
       }]
     });
     res.json(projects);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
+// Get a single project by ID
+router.get('/projects/:id', auth, async (req, res) => {
+  try {
+    const project = await Project.findByPk(req.params.id, {
+      include: [{
+        model: User,
+        attributes: ['email', 'username']
+      }]
+    });
+    if (!project) {
+      return res.status(404).json({ msg: 'Project not found' });
+    }
+    res.json(project);
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: 'Server error' });

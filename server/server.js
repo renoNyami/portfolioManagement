@@ -1,5 +1,7 @@
 console.log('server.js is being executed');
 const express = require('express');
+const http = require('http');
+const WebSocket = require('ws');
 const cors = require('cors');
 const sequelize = require('./config/database');
 const User = require('./models/User');
@@ -63,6 +65,8 @@ const authRoutes = require('./authRoutes');
 const profileRoutes = require('./profileRoutes');
 const projectRoutes = require('./projectRoutes');
 const userRoutes = require('./userRoutes');
+const commentRoutes = require('./commentRoutes');
+const communityRoutes = require('./communityRoutes');
 
 // Test GET route
 app.get('/test', (req, res) => {
@@ -73,11 +77,34 @@ app.use('/api/auth', authRoutes);
 app.use('/api', profileRoutes);
 app.use('/api', projectRoutes);
 app.use('/api', userRoutes);
+app.use('/api', commentRoutes);
+app.use('/api', communityRoutes);
 
 const PORT = process.env.PORT || 5000;
 sequelize.sync().then(() => {
     console.log('Database & tables created!');
-    app.listen(PORT, () => {
+        const server = http.createServer(app);
+    const wss = new WebSocket.Server({ server });
+
+    wss.on('connection', ws => {
+      console.log('Client connected');
+
+      ws.on('message', message => {
+        console.log(`Received: ${message}`);
+        // Echo back message to client
+        ws.send(`Server received: ${message}`);
+      });
+
+      ws.on('close', () => {
+        console.log('Client disconnected');
+      });
+
+      ws.on('error', error => {
+        console.error('WebSocket error:', error);
+      });
+    });
+
+    server.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
   })
