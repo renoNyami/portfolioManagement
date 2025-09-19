@@ -12,32 +12,35 @@ const auth = require('./middleware/auth');
 
 const router = express.Router();
 
-passport.use(new GitHubStrategy({
-    clientID: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/api/auth/github/callback"
-  },
-  async (accessToken, refreshToken, profile, done) => {
-    try {
-      let user = await User.findOne({ where: { githubId: profile.id } });
+// 只有在配置了GitHub OAuth参数时才初始化GitHub策略
+if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+  passport.use(new GitHubStrategy({
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: "http://localhost:3000/api/auth/github/callback"
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        let user = await User.findOne({ where: { githubId: profile.id } });
 
-      if (user) {
-        return done(null, user);
-      } else {
-        user = await User.create({
-          githubId: profile.id,
-          username: profile.username,
-          email: profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null,
-          // You might want to set a default password or handle it differently for OAuth users
-          password: null // Or a generated password
-        });
-        return done(null, user);
+        if (user) {
+          return done(null, user);
+        } else {
+          user = await User.create({
+            githubId: profile.id,
+            username: profile.username,
+            email: profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null,
+            // You might want to set a default password or handle it differently for OAuth users
+            password: null // Or a generated password
+          });
+          return done(null, user);
+        }
+      } catch (err) {
+        return done(err, null);
       }
-    } catch (err) {
-      return done(err, null);
     }
-  }
-));
+  ));
+}
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -179,18 +182,20 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// GitHub OAuth routes
-router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+// GitHub OAuth routes (只有在配置了GitHub OAuth时才定义)
+if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+  router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
 
-router.get('/github/callback',
-  passport.authenticate('github', { failureRedirect: 'http://localhost:3000/login' }),
-  (req, res) => {
-    // Successful authentication, redirect to dashboard page
-    const payload = { user: { id: req.user.id } };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.redirect(`http://localhost:3000/dashboard?token=${token}`);
-  }
-);
+  router.get('/github/callback',
+    passport.authenticate('github', { failureRedirect: 'http://localhost:3000/login' }),
+    (req, res) => {
+      // Successful authentication, redirect to dashboard page
+      const payload = { user: { id: req.user.id } };
+      const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+      res.redirect(`http://localhost:3000/dashboard?token=${token}`);
+    }
+  );
+}
 
 // Get current authenticated user
 router.get('/me', auth, async (req, res) => {

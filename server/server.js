@@ -4,8 +4,15 @@ const http = require('http');
 const WebSocket = require('ws');
 const cors = require('cors');
 const sequelize = require('./config/database');
+const { syncModels } = require('./config/database');
 const User = require('./models/User');
 const Project = require('./models/Project');
+const Demand = require('./models/Demand');
+const Order = require('./models/Order');
+const MarketplaceProject = require('./models/MarketplaceProject');
+const Transaction = require('./models/Transaction');
+const Review = require('./models/Review');
+const Wallet = require('./models/Wallet');
 const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
@@ -67,6 +74,13 @@ const projectRoutes = require('./projectRoutes');
 const userRoutes = require('./userRoutes');
 const commentRoutes = require('./commentRoutes');
 const communityRoutes = require('./communityRoutes');
+const aiRoutes = require('./aiRoutes');
+const demandRoutes = require('./demandRoutes');
+const orderRoutes = require('./orderRoutes');
+const marketplaceRoutes = require('./marketplaceRoutes');
+const transactionRoutes = require('./transactionRoutes');
+const walletRoutes = require('./walletRoutes');
+// 移除对paymentRoutes的引用，因为我们已经删除了这个文件
 
 // Test GET route
 app.get('/test', (req, res) => {
@@ -79,11 +93,17 @@ app.use('/api', projectRoutes);
 app.use('/api', userRoutes);
 app.use('/api', commentRoutes);
 app.use('/api', communityRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api', demandRoutes);
+app.use('/api', orderRoutes);
+app.use('/api', marketplaceRoutes);
+app.use('/api', transactionRoutes);
+app.use('/api', walletRoutes);
+// 移除对paymentRoutes的使用，因为我们已经删除了这个文件
 
 const PORT = process.env.PORT || 5000;
-sequelize.sync().then(() => {
-    console.log('Database & tables created!');
-        const server = http.createServer(app);
+syncModels().then(() => {
+    const server = http.createServer(app);
     const wss = new WebSocket.Server({ server });
 
     wss.on('connection', ws => {
