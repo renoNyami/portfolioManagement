@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require('./middleware/auth');
 const Demand = require('./models/Demand');
 const User = require('./models/User');
+const { Op } = require('sequelize');
 
 // 获取所有开放的需求
 router.get('/demands', auth, async (req, res) => {
