@@ -14,11 +14,23 @@ import UserProjectsPage from './pages/UserProjectsPage';
 import ProjectSettingsPage from './pages/ProjectSettingsPage';
 import PortfolioPage from './pages/PortfolioPage';
 import DashboardPage from './pages/DashboardPage';
-import ProjectDetailPage from './pages/ProjectDetailPage';
 import CommunityPage from './pages/CommunityPage';
 import CommunityPostDetailPage from './pages/CommunityPostDetailPage';
+import AIProjectGenerator from './pages/AIProjectGenerator';
+import AIProjectDetailPage from './pages/AIProjectDetailPage';
+import AIProjectsListPage from './pages/AIProjectsListPage';
 import Sidebar from './components/Sidebar'; // 导入侧边栏组件
 import ProtectedRoute from './components/ProtectedRoute'; // 导入ProtectedRoute组件
+import DemandListPage from './pages/DemandListPage';
+import DemandDetailPage from './pages/DemandDetailPage';
+import CreateDemandPage from './pages/CreateDemandPage';
+import OrderListPage from './pages/OrderListPage';
+import OrderDetailPage from './pages/OrderDetailPage';
+import MarketplacePage from './pages/MarketplacePage';
+import ProjectDetailPage from './pages/MarketplaceProjectDetailPage';
+import CreateProjectPage from './pages/CreateProjectPage';
+import TransactionListPage from './pages/TransactionListPage';
+import WalletPage from './pages/WalletPage';
 
 const { Header, Content } = Layout;
 
@@ -54,6 +66,22 @@ function App() {
                     <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
                     <Route path="/community" element={<CommunityPage />} />
                     <Route path="/community/:postId" element={<CommunityPostDetailPage />} />
+                    <Route path="/ai-project-generator" element={<AIProjectGenerator />} />
+                    <Route path="/ai-projects" element={<AIProjectsListPage />} />
+                    <Route path="/ai-projects/:projectId" element={<AIProjectDetailPage />} />
+                    
+                    {/* 新增的交易平台路由 */}
+                    <Route path="/demands" element={<DemandListPage />} />
+                    <Route path="/demands/create" element={<CreateDemandPage />} />
+                    <Route path="/demands/:demandId" element={<DemandDetailPage />} />
+                    <Route path="/orders" element={<OrderListPage />} />
+                    <Route path="/orders/:orderId" element={<OrderDetailPage />} />
+                    <Route path="/marketplace" element={<MarketplacePage />} />
+                    <Route path="/marketplace/create" element={<CreateProjectPage />} />
+                    <Route path="/marketplace/projects/:projectId" element={<ProjectDetailPage />} />
+                    <Route path="/transactions" element={<TransactionListPage />} />
+                    <Route path="/wallet" element={<WalletPage />} />
+                    
                     {/* 默认重定向到仪表盘或个人资料页 */}
                     <Route path="*" element={<DashboardPage />} />
                   </Routes>
